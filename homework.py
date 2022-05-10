@@ -80,18 +80,19 @@ class Running(Training):
                          weight,
                          )
 
-   
-    def get_spent_calories(self) -> float:        #метод расчёта калорий
+
+    def get_spent_calories(self) -> float:
         COEF_CAL_RUN_1 = 18
         COEF_CAL_RUN_2 = 20
         aver_Speed_Run = Training.get_mean_speed(self)
         time_Train_min_Run = self.duration * 60
 
         Cal_calculation_Run: float = ((COEF_CAL_RUN_1 * float(aver_Speed_Run)
-                                    - COEF_CAL_RUN_2) * self.weight
-                                     / self.M_IN_KM 
-                                     * time_Train_min_Run)
+                                        - COEF_CAL_RUN_2) * self.weight
+                                        / self.M_IN_KM
+                                        * time_Train_min_Run)
         return Cal_calculation_Run
+
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
@@ -99,7 +100,7 @@ class SportsWalking(Training):
                  action: int,
                  duration: float,
                  weight: float,
-                 height: float,        #дополнительный параметр height — рост спортсмена.
+                 height: float,
                  ) -> None:
 
         super().__init__(action,
@@ -107,23 +108,25 @@ class SportsWalking(Training):
                          weight)
         self.height = height
 
-    #метод расчёта калорий
-    def get_spent_calories(self) -> float:        
+
+    def get_spent_calories(self) -> float:
         COEF_CAL_SpWalk_1 = 0.035
         COEF_CAL_SpWalk_2 = 0.029
         aver_Speed_SpWak = Training.get_mean_speed(self)
         time_Train_min_SpWalk = self.duration * 60
 
-        Cal_calculation_SpWalk: float = ((COEF_CAL_SpWalk_1 * self.weight + 
-                                        (aver_Speed_SpWak ** 2 // self.height)
-                                         * COEF_CAL_SpWalk_2 * self.height)
-                                         * time_Train_min_SpWalk)
+        Cal_calculation_SpWalk: float = ((COEF_CAL_SpWalk_1 * self.weight +
+                                          (aver_Speed_SpWak ** 2 // self.height)
+                                           * COEF_CAL_SpWalk_2 * self.height)
+                                           * time_Train_min_SpWalk)
         return Cal_calculation_SpWalk
 
 
 class Swimming(Training):
     """Тренировка: плавание."""
+
     LEN_STEP: float = 1.38
+
     def __init__(self,
                  action: int,
                  duration: float,
@@ -141,14 +144,16 @@ class Swimming(Training):
         self.LEN_STEP = LEN_STEP
 
     def get_mean_speed(self) -> float:
-        aver_Speed_Swim_pool: float = self.length_pool * self.count_pool / self.M_IN_KM / self.duration
+        aver_Speed_Swim_pool: float = (self.length_pool * self.count_pool
+                                        / self.M_IN_KM / self.duration)
         return aver_Speed_Swim_pool
 
     def get_spent_calories(self) -> float:
         COEF_CAL_SWIM_1 = 1.1
         COEF_CAL_SWIM_2 = 2
         aver_Speed_Swim_cal = self.get_mean_speed()
-        Cal_Caculation_Swim: float = (aver_Speed_Swim_cal + COEF_CAL_SWIM_1) * COEF_CAL_SWIM_2 * self.weight
+        Cal_Caculation_Swim: float = ((aver_Speed_Swim_cal + COEF_CAL_SWIM_1)
+                                        * COEF_CAL_SWIM_2 * self.weight)
         return Cal_Caculation_Swim
 
 
@@ -168,7 +173,7 @@ def read_package(workout_type: str, data: list) -> Training:
 def main(training: Training) -> None:
     """Главная функция."""
     info = training.show_training_info()
-    return print (info.get_message())
+    return print(info.get_message())
 
 
 if __name__ == '__main__':
