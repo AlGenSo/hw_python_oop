@@ -27,7 +27,6 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-#Добавляю атрибуты класса
     action: int
     duration: float
     weight: float
@@ -42,7 +41,7 @@ class Training:
         self.action = action
         self.duration = duration
         self.weight = weight
-    
+
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
         Dist = self.action * self.LEN_STEP / self.M_IN_KM
@@ -51,7 +50,7 @@ class Training:
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
         Dist = self.action * self.LEN_STEP / self.M_IN_KM
-        aver_Speed:float = Dist / self.duration
+        aver_Speed: float = Dist / self.duration
         return aver_Speed
 
     def get_spent_calories(self) -> float:
@@ -75,21 +74,23 @@ class Running(Training):
                  duration: float,
                  weight: float,
                  ) -> None:
-    #наследуем функциональность конструктора из класса-родителя
+
         super().__init__(action,
                          duration,
                          weight,
                          )
 
-    #метод расчёта калорий
-    def get_spent_calories(self) -> float:    
+   
+    def get_spent_calories(self) -> float:        #метод расчёта калорий
         COEF_CAL_RUN_1 = 18
         COEF_CAL_RUN_2 = 20
         aver_Speed_Run = Training.get_mean_speed(self)
         time_Train_min_Run = self.duration * 60
-    #Назначение переменной формулы расчёта калорий при беге
-        Cal_calculation_Run: float = ((COEF_CAL_RUN_1 * float(aver_Speed_Run) - COEF_CAL_RUN_2)
-                        *self.weight / self.M_IN_KM * time_Train_min_Run)
+
+        Cal_calculation_Run: float = ((COEF_CAL_RUN_1 * float(aver_Speed_Run)
+                                    - COEF_CAL_RUN_2) * self.weight
+                                     / self.M_IN_KM 
+                                     * time_Train_min_Run)
         return Cal_calculation_Run
 
 class SportsWalking(Training):
@@ -98,9 +99,9 @@ class SportsWalking(Training):
                  action: int,
                  duration: float,
                  weight: float,
-                 height: float,#дополнительный параметр height — рост спортсмена.
+                 height: float,        #дополнительный параметр height — рост спортсмена.
                  ) -> None:
-    #наследуем функциональность конструктора из класса-родителя
+
         super().__init__(action,
                          duration,
                          weight)
@@ -112,9 +113,11 @@ class SportsWalking(Training):
         COEF_CAL_SpWalk_2 = 0.029
         aver_Speed_SpWak = Training.get_mean_speed(self)
         time_Train_min_SpWalk = self.duration * 60
-    #Назначение переменной формулы расчёта калорий при спортивной ходьбе
-        Cal_calculation_SpWalk: float = ((COEF_CAL_SpWalk_1 * self.weight + (aver_Speed_SpWak ** 2 // self.height)
-                                  * COEF_CAL_SpWalk_2 * self.height) * time_Train_min_SpWalk)
+
+        Cal_calculation_SpWalk: float = ((COEF_CAL_SpWalk_1 * self.weight + 
+                                        (aver_Speed_SpWak ** 2 // self.height)
+                                         * COEF_CAL_SpWalk_2 * self.height)
+                                         * time_Train_min_SpWalk)
         return Cal_calculation_SpWalk
 
 
@@ -136,12 +139,11 @@ class Swimming(Training):
         self.length_pool = length_pool
         self.count_pool = count_pool
         self.LEN_STEP = LEN_STEP
-    #расчёт средней скорости <<длина_бассейна * count_pool / M_IN_KM / время_тренировки>>
+
     def get_mean_speed(self) -> float:
-        aver_Speed_Swim_pool: float = self.length_pool*self.count_pool/self.M_IN_KM/self.duration
+        aver_Speed_Swim_pool: float = self.length_pool * self.count_pool / self.M_IN_KM / self.duration
         return aver_Speed_Swim_pool
 
-    #расчёт израсходованных калорий <<(средняя_скорость + 1.1) * 2 * вес  >>
     def get_spent_calories(self) -> float:
         COEF_CAL_SWIM_1 = 1.1
         COEF_CAL_SWIM_2 = 2
@@ -152,15 +154,13 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-#Создаю словарь, в котором сопоставляются коды тренировок и классы
-    Dict_workout = {
+    Dict_workout = {        # Создаю словарь, в котором сопоставляются коды тренировок и классы
         'RUN': Running,
         'WLK': SportsWalking,
         'SWM': Swimming
-    }  
-#Проверяем, есть ли входящий аргумент в списке ключей.
-#И если есть, выполняем код.
-    if workout_type in Dict_workout:
+    }
+
+    if workout_type in Dict_workout:        # Проверяем, есть ли входящий аргумент в списке ключей.
         training = Dict_workout[workout_type](*data)
     return training
     
