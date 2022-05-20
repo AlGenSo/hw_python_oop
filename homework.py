@@ -6,18 +6,18 @@ from typing import ClassVar, Dict, Sequence, Tuple, Type
 class InfoMessage:
     """Информационное сообщение о тренировке."""
 
-    training_type: str
-    duration: float
-    distance: float
-    speed: float
-    calories: float
-    INFO = (
+    INFO: ClassVar[str] = (
         'Тип тренировки: {training_type:}; '
         'Длительность: {duration:.3f} ч.; '
         'Дистанция: {distance:.3f} км; '
         'Ср. скорость: {speed:.3f} км/ч; '
         'Потрачено ккал: {calories:.3f}.'
     )
+    training_type: str
+    duration: float
+    distance: float
+    speed: float
+    calories: float
 
     def get_message(self) -> str:
         """Сообщение с типом тренировки и данными"""
@@ -28,11 +28,12 @@ class InfoMessage:
 class Training:
     """Базовый класс тренировки."""
 
+    LEN_STEP: ClassVar[float] = 0.65
+    M_IN_KM: ClassVar[int] = 1000
+    MINUTES_PER_HOUR: ClassVar[int] = 60
     action: int
     duration: float
     weight: float
-    LEN_STEP: ClassVar = 0.65
-    M_IN_KM: ClassVar = 1000
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -45,8 +46,8 @@ class Training:
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
         raise NotImplementedError(
-            f'Калории просят огня! '
-            f'Переопределите метод в наследнике - {self.__class__.__name__}'
+            'Калории просят огня! '
+            'Переопределите метод в наследнике - {self.__class__.__name__}'
         )
 
     def show_training_info(self) -> InfoMessage:
@@ -64,9 +65,8 @@ class Training:
 class Running(Training):
     """Тренировка: бег."""
 
-    SPEED_MULTIPLIER: int = 18
-    SUBTRACTED_SPEED: int = 20
-    MINUTES_PER_HOUR: int = 60
+    SPEED_MULTIPLIER: ClassVar[int] = 18
+    SUBTRACTED_SPEED: ClassVar[int] = 20
 
     def get_spent_calories(self) -> float:
         """Расчёт количества потраченных калорий за тренировку"""
@@ -85,7 +85,6 @@ class SportsWalking(Training):
 
     WEIGHT_MULTUPLIER_1 = 0.035
     WEIGHT_MULTUPLIER_2 = 0.029
-    MINUTES_PER_HOUR = 60
 
     def __init__(self,
                  action: int,
@@ -152,26 +151,29 @@ class Swimming(Training):
 
 
 # Инициализируем словарь как константу
-WORKOUTS: Dict[str, Tuple[Type[Training], Type[int]]] = {
+WORKOUTS: Dict[str, Tuple[Type[Training], int]] = {
     'RUN': (Running, 3),
     'WLK': (SportsWalking, 4),
     'SWM': (Swimming, 5),
 }
 
 
-def read_package(workout_type: str, data: Sequence[Type[int]]) -> Training:
+def read_package(workout_type: str, data: Sequence[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
     if workout_type not in WORKOUTS:
+
         raise ValueError(
             f'Тип тренировки {workout_type} отсутствует'
         )
     workout, count_args = WORKOUTS.get(workout_type)
     if count_args != len(data):
+
         raise ValueError(
-            f'Количество аргументов {workout_type} '
-            f'для класса {workout} '
-            f'не соответствует требованиям!'
+            'Количество аргументов {workout_type} '
+            'для класса {workout} '
+            'не соответствует требованиям!'
         )
+
     return workout(*data)
 
 
